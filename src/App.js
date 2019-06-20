@@ -1,79 +1,50 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from './Person/Person'
+import Validation from './Validation/Validation'
+import Char from './Char/Char'
 
 class App extends Component {
   state = {
-    persons: [
-      { id:1, name: "John",age:29 },
-      { id:2, name: "Max",age:20 },
-      { id:3, name: "Jane",age:28 }
-    ]
+    userInput: ''
   }
 
-  nameChangedHandler = (event,id) => {
-	//console.log('was clicked');
-	const personIndex = this.state.persons.findIndex(p => {
-		return p.id = id;
+  
+  calculateInputLength = (event) => {
+	this.setState({
+		userInput: event.target.value
 	});
-
-	const person = { ...this.state.persons[personIndex] }
-
-	person.name = event.target.value;
-
-	const persons = [...this.state.persons]
-	persons[personIndex] = person;
-
-    this.setState( {persons: persons} );
   }
 
-  switchNameHandler = (name) => {
-    //console.log('was clicked');
-    this.setState({
-      persons: [
-        { id:1, name: "John Doe",age:29 },
-        { id:2, name: name,age:20 },
-        { id:3, name: "Jane",age:27 }
-      ],
-      showPersons: false
-    });
-  }
-
-  deletePersonHandler = (personIndex) => {
-	  const personObject = [...this.state.persons];
-	  personObject.splice(personIndex,1);
-	  this.setState({persons:personObject});
-  }
-
-  togglePersonsHanler = () => {
-    const doesShow = this.state.showPersons;
-    this.setState({showPersons: !doesShow});
+  deleteCharHandler = (index) => {
+	const text = this.state.userInput.split('');
+	text.splice(index,1);
+	const updatedText = text.join('');
+	this.setState({ userInput: updatedText });
   }
 
   render() {
+	const style = {
+		marginTop: '20px',
+	}
 
-    let persons = null;
-
-    if(this.state.showPersons) {
-      persons = (
-        <div>
-			{this.state.persons.map((person,index) => {
-				return <Person 
-					click={() => this.deletePersonHandler(index)}
-					name={person.name} 
-					age={person.age} 
-					key={person.id} 
-					changed={(event) => this.nameChangedHandler(event,person.id)}/>	
-			})}
-        </div>
-      );
-    }
+	const charList = this.state.userInput.split('').map((char,index) => {
+		return <Char character={char} key={index} clicked={() => this.deleteCharHandler(index)}/>
+	});
     return (
-      <div className="App">
-        <h1>Hi I'm a React App</h1>
-        <p> This is really working!</p>
-        <button onClick={this.togglePersonsHanler}>Toggle Persons</button>
-        {persons}
+      <div className="App" style={style}>
+		<div style={style}>
+			<input 
+			type="text" 
+			onChange={(event) => this.calculateInputLength(event)} 
+			placeholder="Type to count length"
+			value={this.state.userInput}
+			/>
+		</div>
+		<Validation lengthOfInput={this.state.userInput.length} />
+		<div style={style}>
+			<span>Input Field Length: <strong>{this.state.userInput.length}</strong></span>
+		</div>
+        {charList}
       </div>
     );
     //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Does This Work Now?'));
