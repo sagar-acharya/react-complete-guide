@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Radium from 'radium';
 import './App.css';
 import Person from './Person/Person'
 
@@ -14,7 +15,7 @@ class App extends Component {
   nameChangedHandler = (event,id) => {
 	//console.log('was clicked');
 	const personIndex = this.state.persons.findIndex(p => {
-		return p.id == id;
+		return p.id === id;
 	});
 
 	const person = { ...this.state.persons[personIndex] }
@@ -51,7 +52,18 @@ class App extends Component {
   }
 
   render() {
-
+    const style = {
+      backgroundColor: 'green',
+      color: 'white',
+      border: '1px solid blue',
+      padding: '8px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+      ':hover':{
+        backgroundColor: 'pink',
+        color: 'black',
+      }
+    }
     let persons = null;
 
     if(this.state.showPersons) {
@@ -67,12 +79,17 @@ class App extends Component {
 			})}
         </div>
       );
+      style.backgroundColor = 'red';
+      style[':hover'] = {
+        backgroundColor: 'orange',
+        color: 'green',
+      };
     }
     return (
       <div className="App">
         <h1>Hi I'm a React App</h1>
         <p> This is really working!</p>
-        <button onClick={this.togglePersonsHanler}>Toggle Persons</button>
+        <button style={style} onClick={this.togglePersonsHanler}>Toggle Persons</button>
         {persons}
       </div>
     );
@@ -80,4 +97,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Radium(App);
